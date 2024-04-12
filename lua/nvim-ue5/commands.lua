@@ -73,7 +73,7 @@ function commands.bind(Module)
 
 		vim.api.nvim_create_user_command('UEGenerateClangd',
 			function(opts)
-				Module.clangd.create_clangd_file(Module.config.options, Module.config.project['clangd'])
+				Module.clangd.create_clangd_file(Module.config.options, Module.config.project['clangd'], Module.config.project['module_names'])
 			end,
 			{})
 
