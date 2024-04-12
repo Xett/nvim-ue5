@@ -31,6 +31,15 @@ Genereates a UInterface and IInterface header.
 Instead of using parents, you must use uparents for the parents of the UInterface class, and iparents for the parents of the IInterface class. 
 uparents will default to UInterface.
 ## Installation
+### Packer
+``` lua
+use {
+  'Xett/nvim-ue5',
+  requires = {
+    'nvim-lua/plenary.nvim'
+  }
+}
+```
 ### init.lua
 ``` lua
 local ue5 = require('nvim-ue5')
