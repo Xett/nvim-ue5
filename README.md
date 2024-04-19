@@ -1,7 +1,9 @@
 # nvim-ue5
 ## Features
-### Recommendations
-[UE5 cpp tressitter parser](https://github.com/Xett/tree-sitter-cpp-ue5)
+### Parsing
+When loading .h/.cpp files in a UE5 project, the filetype is changed to cpp_ue5, meaning you can use a parser such as treesitter to detect the filetype for parsing.
+
+[UE5 cpp tressitter parser](https://github.com/Xett/tree-sitter-cpp-ue5) is one such treesitter parser, built for parsing ue5 code. Move the queries folder to <nvim_config_dir>/queries/cpp_ue5
 ### Commands
 #### UEInfo
 Shows plugin information.
