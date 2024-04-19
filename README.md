@@ -1,32 +1,35 @@
 # nvim-ue5
 ## Features
-### UEInfo
+### Recommendations
+[UE5 cpp tressitter parser](https://github.com/Xett/tree-sitter-cpp-ue5)
+### Commands
+#### UEInfo
 Shows plugin information.
-### UEClean
+#### UEClean
 Cleans the project according to the clean_map table in the config.
-### UEGenerateProject
+#### UEGenerateProject
 Generates the project solution files. Akin to calling GenerateProjectFiles.bat/sh for the project.
-### UEGenerateHeaders
+#### UEGenerateHeaders
 Generates the project header files using the UBT/UHT.
 Takes 2 arguments, module name and platform.
-### UEGenerateClangd
+#### UEGenerateClangd
 Generates a .clangd file according to the clangd settings in the config.
-### UEGenerateCompileCommands
+#### UEGenerateCompileCommands
 Generates a compile_commands.json file, require jq to be installed as it uses that.
-### UEBuild
+#### UEBuild
 Runs the UBT on the project.
 Requires 3 arguments, target, target type and platform. Defaults to Development, Editor and the current platform.
-### UEClass
+#### UEClass
 Generates a UClass header definition (text only) below the current cursor position accounting for tab indentation.
 Requres 3 arguments: class name, UCLASS parameters, and parent classes. 
 The class name must come first, and does not need the preceding U, while parameters and parents can be omitted or in any order.
 UCLASS parameters must be written as args:Param1,Param2 and parent classes must be written as parents:Parent1,Parent2.
 If no parents are given, it will default to UObject.
-### UEActor
+#### UEActor
 Generates a UClass header like UEClass, but parents will default to AActor.
-### UEStruct
+#### UEStruct
 Generates a struct header like UEClass, but parents will not have a default.
-### UEInterface
+#### UEInterface
 Genereates a UInterface and IInterface header. 
 Instead of using parents, you must use uparents for the parents of the UInterface class, and iparents for the parents of the IInterface class. 
 uparents will default to UInterface.
