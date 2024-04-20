@@ -41,6 +41,7 @@ uparents will default to UInterface.
 use {
   'Xett/nvim-ue5',
   requires = {
+    'neovim/nvim-lspconfig',
     'nvim-lua/plenary.nvim'
   }
 }
