@@ -20,6 +20,28 @@ function commands.init(Module)
 		pattern = "*",
 		callback = function(ev)
 			Module.scan()
+
+			--- Check if clangd is already set up in lsp config
+			local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+			local lsp_config = require('lspconfig')
+
+			Module.old_clangd_config = lsp_config['clangd']
+			lsp_config['clangd'].setup{
+				cmd = {
+					"clangd",
+					"--background-index",
+					"--suggest-missing-includes",
+					"--compile-commands-dir=" .. vim.loop.cwd(),
+				},
+				filetypes = {
+					"c",
+					"cpp",
+					"h",
+					"hpp",
+				},
+				capabilities = lsp_capabilities,
+			}
+			vim.cmd([[ LspRestart ]])
 		end
 	})
 
