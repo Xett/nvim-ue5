@@ -5,7 +5,7 @@ local utils = require("nvim-ue5.utils")
 function headers.generate_header_files(Module, module_name, platform)
 	local config = Module.config
 
-	Module.utils.open_bottom_buffer(Module)
+	Module.bot_buf.open(Module)
 
 	local options = config.options
 	local project_name = config.project['project_name']
@@ -13,7 +13,7 @@ function headers.generate_header_files(Module, module_name, platform)
 	local project_string = '-Project=' .. vim.loop.cwd() .. '/' .. project_name .. '.uproject'
 	local target_string = '-Target=' .. module_name .. ' ' .. platform .. ' Development'
 
-	Module.utils.write_to_bottom_buffer(Module, {"Generating header files for " .. module_name})
+	Module.bot_buf.write(Module, {"Generating header files for " .. module_name})
 	
 	local command_string = utils.get_build_script_path(options) .. ' -Mode=UnrealHeaderTool "' .. target_string .. ' ' .. project_string .. '"'
 	
@@ -22,14 +22,14 @@ function headers.generate_header_files(Module, module_name, platform)
 		{
 			on_exit = function(job_id, code, event)
 				if event == 'exit' and code == 0 then
-					Module.utils.append_to_bottom_buffer(Module, {"Header files generated!"})
+					Module.bot_buf.append(Module, {"Header files generated!"})
 				else
-					Module.utils.append_to_bottom_buffer(Module, {"Failed to generate header files..."})
+					Module.bot_buf.append(Module, {"Failed to generate header files..."})
 				end
 			end,
 			on_stdout = function (chan_id, data, name)
 				for key, value in pairs(data) do
-					Module.utils.append_to_bottom_buffer(Module, {value})
+					Module.bot_buf.append(Module, {value})
 				end
 			end
 		}

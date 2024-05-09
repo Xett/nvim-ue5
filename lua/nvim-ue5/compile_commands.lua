@@ -17,8 +17,8 @@ function compile_commands.build_compile_commands(Module)
 	local project_config = Module.config.project['config']
 	local project_name = Module.config.project['config_name']
 
-	Module.utils.open_bottom_buffer(Module)
-	Module.utils.write_to_bottom_buffer(Module, {"Generating compile_commands.json..."})
+	Module.bot_buf.open(Module)
+	Module.bot_buf.write(Module, {"Generating compile_commands.json..."})
 
 	local flags = " "
 	local compile_commands = project_config['compile_commands']
@@ -34,9 +34,9 @@ function compile_commands.build_compile_commands(Module)
 		{
 			on_exit = function(job_id, code, event)
 				if event == 'exit' and code == 0 then
-					Module.utils.append_to_bottom_buffer(Module, {"compile_commands.json generated!"})
+					Module.bot_buf.append(Module, {"compile_commands.json generated!"})
 				else
-					Module.utils.append_to_bottom_buffer(Module, {"Failed to generate compile_commands.json..."})
+					Module.bot_buf.append(Module, {"Failed to generate compile_commands.json..."})
 				end
 			end
 		}

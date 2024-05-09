@@ -34,7 +34,7 @@ function clean.delete_all_mode(Module, path, whitelist, recursive)
 			end
 			local file_path = path .. '/' .. name
 			if file_type ~= "directory" and not clean.is_file_in_whitelist(file_path, whitelist) then
-				Module.utils.append_to_bottom_buffer(Module, {"\t\tDeleting " .. file_path})
+				Module.bot_buf.append(Module, {"\t\tDeleting " .. file_path})
 				os.remove(file_path)
 			elseif file_type == "directory" and recursive then
 				clean.delete_all_mode(Module, file_path, whitelist, recursive)
@@ -49,29 +49,29 @@ function clean.delete_specific_mode(Module, path, whitelist, files_to_delete)
 		if not clean.is_file_in_whitelist(file_path, whitelist) then
 			local success, err_msg = os.remove(file_path)
 			if success then
-				Module.utils.append_to_bottom_buffer(Module, {"\t\tDeleting ".. whitelist_entry})
+				Module.bot_buf.append(Module, {"\t\tDeleting ".. whitelist_entry})
 			end
 		end
 	end
 end
 
 function clean.clean_dir(Module, path, config, recursive)
-	Module.utils.append_to_bottom_buffer(Module, {"Cleaning " .. path})
+	Module.bot_buf.append(Module, {"Cleaning " .. path})
 	if recursive == nil then
 		recursive = true
 	end
 	if config.mode=="delete_all" then
-		Module.utils.append_to_bottom_buffer(Module, {"\tMode is Delete All"})
+		Module.bot_buf.append(Module, {"\tMode is Delete All"})
 		clean.delete_all_mode(Module, path, config.whitelist_files, recursive)
 	elseif config.mode=="delete_specific" then
-		Module.utils.append_to_bottom_buffer(Module, {"\tMode is Delete Specific"})
+		Module.bot_buf.append(Module, {"\tMode is Delete Specific"})
 		clean.delete_specific_mode(Module, path, config.whitelist_files, config.files_to_delete)
 	end
 end
 
 function clean.clean(Module)
-	Module.utils.open_bottom_buffer(Module)
-	Module.utils.write_to_bottom_buffer(Module, {"Cleaning project directory..."})
+	Module.bot_buf.open(Module)
+	Module.bot_buf.write(Module, {"Cleaning project directory..."})
 	local clean_map = Module.config.project.config['clean_map']
 	--- Iterate through the cleaning map
 	for dir, config in pairs(clean_map) do

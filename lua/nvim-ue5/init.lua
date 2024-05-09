@@ -19,7 +19,7 @@ nvim_ue5.utils = require("nvim-ue5.utils")
 
 nvim_ue5.loaded = false
 
-nvim_ue5.bottom_buffer_id = nil
+nvim_ue5.bot_buf = require("nvim-ue5.bot_buf")
 
 function nvim_ue5.setup(options)
 	nvim_ue5.config.setup(options)
