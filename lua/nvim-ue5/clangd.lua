@@ -2,17 +2,17 @@ local clangd = {}
 
 function clangd.add_debug_flag(Module, clangd_file, debug_flag)
 	clangd_file:write('\t\t"-D' .. debug_flag .. '",\n')
-	Module.bot_buf.append(Module, {"Flag:\t\t\t" .. debug_flag})
+	Module.bot_buf.write(Module, {"Flag:\t\t\t" .. debug_flag})
 end
 
 function clangd.add_engine_include_path(Module, clangd_file, unreal_engine_path, secondary_path)
 	clangd_file:write('\t\t"-I' .. unreal_engine_path .. secondary_path .. '",\n')
-	Module.bot_buf.append(Module, {"Engine Include:\t\t" .. unreal_engine_path .. secondary_path})
+	Module.bot_buf.write(Module, {"Engine Include:\t\t" .. unreal_engine_path .. secondary_path})
 end
 
 function clangd.add_project_include_path(Module, clangd_file, module_name)
 	clangd_file:write('\t\t"-I' .. vim.loop.cwd() .. '/Intermediate/Build/Linux/UnrealEditor/Inc/' .. module_name .. '/UHT",\n')
-	Module.bot_buf.append(Module, {"Project Include:\t" .. vim.loop.cwd() .. '/Intermediate/Build/Linux/UnrealEditor/Inc/' .. module_name .. '/UHT'})
+	Module.bot_buf.write(Module, {"Project Include:\t" .. vim.loop.cwd() .. '/Intermediate/Build/Linux/UnrealEditor/Inc/' .. module_name .. '/UHT'})
 end
 
 function clangd.create_clangd_file(Module)

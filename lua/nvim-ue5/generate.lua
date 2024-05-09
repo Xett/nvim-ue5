@@ -34,14 +34,14 @@ function generate.generate_project_files(Module)
 		{
 			on_exit = function(job_id, code, event)
 				if event == 'exit' and code == 0 then
-					Module.bot_buf.append(Module, {"Project generated"})
+					Module.bot_buf.write(Module, {"Project generated"})
 				else
-					Module.bot_buf.append(Module, {"Project failed to generate..."})
+					Module.bot_buf.write(Module, {"Project failed to generate..."})
 				end
 			end,
 			on_stdout = function(chan_id, data, name)
 				for key, value in pairs(data) do
-					Module.bot_buf.append(Module, {value})
+					Module.bot_buf.write(Module, {value})
 				end
 			end
 		}

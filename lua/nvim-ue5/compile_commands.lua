@@ -34,9 +34,9 @@ function compile_commands.build_compile_commands(Module)
 		{
 			on_exit = function(job_id, code, event)
 				if event == 'exit' and code == 0 then
-					Module.bot_buf.append(Module, {"compile_commands.json generated!"})
+					Module.bot_buf.write(Module, {"compile_commands.json generated!"})
 				else
-					Module.bot_buf.append(Module, {"Failed to generate compile_commands.json..."})
+					Module.bot_buf.write(Module, {"Failed to generate compile_commands.json..."})
 				end
 			end
 		}

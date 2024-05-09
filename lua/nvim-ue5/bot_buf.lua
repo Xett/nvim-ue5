@@ -1,6 +1,7 @@
 local bot_buf = {}
 
 bot_buf.id = nil
+bot_buf.first_line_written = false
 
 function bot_buf.is_open(Module)
 	if Module.bot_buf.id == nil then
@@ -41,20 +42,26 @@ function bot_buf.open(Module)
 	end
 end
 
-function bot_buf.write(Module, text)
-	if Module.bot_buf.id == nil then
+function bot_buf.clear(Module)
+	if not Module.bot_buf.is_open(Module) then
 		Module.bot_buf.open(Module)
 	end
 
-	vim.api.nvim_buf_set_lines(Module.bot_buf.id, 0, -1, false, text)
+	vim.api.nvim_buf_set_lines(Module.bot_buf.id, 0, -1, false, {""})
+	Module.bot_buf.first_line_written = false
 end
 
-function bot_buf.append(Module, text)
-	if Module.bot_buf.id == nil then
+function bot_buf.write(Module, text)
+	if Module.bot_buf.is_open(Module) then
 		Module.bot_buf.open(Module)
 	end
 
-	vim.api.nvim_buf_set_lines(Module.bot_buf.id, -1, -1, false, text)
+	if not Module.bot_buf.first_line_written then
+		vim.api.nvim_buf_set_lines(Module.bot_buf.id, 0, -1, false, text)
+		Module.bot_buf.first_line_written = true
+	else
+		vim.api.nvim_buf_set_lines(Module.bot_buf.id, -1, -1, false, text)
+	end
 end
 
 return bot_buf
