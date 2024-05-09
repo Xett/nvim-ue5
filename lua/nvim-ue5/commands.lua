@@ -67,21 +67,21 @@ function commands.bind(Module)
 
 		vim.api.nvim_create_user_command('UEGenerateProject',
 			function(opts)
-				Module.generate.generate_project_files(Module.config.options, Module.config.project['project_name'])
+				Module.generate.generate_project_files(Module)
 			end,
 			{})
 
 		vim.api.nvim_create_user_command('UEGenerateCompileCommands',
 			function(opts)
-				Module.compile_commands.build_compile_commands(Module.config.options, Module.config.project['project_name'])
+				Module.compile_commands.build_compile_commands(Module)
 			end,
 			{})
 
 		vim.api.nvim_create_user_command('UEGenerateHeaders',
 			function(opts)
 				local module_name = opts['fargs'][1]
-				local platform = opts['fargs'][2]
-				Module.headers.generate_header_files(Module.config, module_name, platform)
+				local platform = opts['fargs'][2] or Module.utils.get_current_platform()
+				Module.headers.generate_header_files(Module, module_name, platform)
 			end,
 			{
 				nargs='*',
@@ -89,13 +89,13 @@ function commands.bind(Module)
 
 		vim.api.nvim_create_user_command('UEClean',
 			function(opts)
-				Module.clean.clean(Module.config.project['clean_map'])
+				Module.clean.clean(Module)
 			end,
 			{})
 
 		vim.api.nvim_create_user_command('UEGenerateClangd',
 			function(opts)
-				Module.clangd.create_clangd_file(Module.config.options, Module.config.project['clangd'], Module.config.project['module_names'])
+				Module.clangd.create_clangd_file(Module)
 			end,
 			{})
 
@@ -104,7 +104,7 @@ function commands.bind(Module)
 				local target = opts['fargs'][1] or "Development"
 				local target_type = opts['fargs'][2] or "Editor"
 				local platform = opts['fargs'][3] or Module.utils.get_current_platform()
-				Module.build.build(Module.config, target, target_type, platform)
+				Module.build.build(Module, target, target_type, platform)
 			end,
 			{
 				nargs='*',

@@ -15,23 +15,37 @@ function generate.parse_output(chan_id, data, name)
 	end
 end
 
-function generate.generate_project_files(options, project_name)
+function generate.generate_project_files(Module)
+	local options = Module.config.options
+	local project_name = Module.config.project['project_name']
 	local generate_project_script_path = utils.get_generated_script_path(options)
 	if not generate_project_script_path then
 		--- Unknown platform, raise an error?
 		return
 	end
 
-	vim.api.nvim_out_write("Generating project...\n")
+	Module.utils.open_bottom_buffer(Module)
+	Module.utils.write_to_bottom_buffer(Module, {"Generating project files"})
+
 	local command_string = generate_project_script_path .. " " .. generate.get_arguments_string(project_name)
-	vim.fn.jobstart(command_string,
+	
+	vim.fn.jobstart(
+		command_string,
 		{
-			on_exit = utils.jobstart_on_exit_out_write({
-				success='Project generated!\n',
-				fail='Project failed to generate...\n',
-			}),
-			on_stdout = generate.parse_output
-		})
+			on_exit = function(job_id, code, event)
+				if event == 'exit' and code == 0 then
+					Module.utils.append_to_bottom_buffer(Module, {"Project generated"})
+				else
+					Module.utils.append_to_bottom_buffer(Module, {"Project failed to generate..."})
+				end
+			end,
+			on_stdout = function(chan_id, data, name)
+				for key, value in pairs(data) do
+					Module.utils.append_to_bottom_buffer(Module, {value})
+				end
+			end
+		}
+	)
 end
 
 return generate

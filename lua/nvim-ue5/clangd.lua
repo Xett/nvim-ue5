@@ -1,33 +1,46 @@
 local clangd = {}
 
-function clangd.add_debug_flag(clangd_file, debug_flag)
+function clangd.add_debug_flag(Module, clangd_file, debug_flag)
 	clangd_file:write('\t\t"-D' .. debug_flag .. '",\n')
+	Module.utils.append_to_bottom_buffer(Module, {"Flag:\t\t\t" .. debug_flag})
 end
 
-function clangd.add_engine_include_path(clangd_file, unreal_engine_path, secondary_path)
+function clangd.add_engine_include_path(Module, clangd_file, unreal_engine_path, secondary_path)
 	clangd_file:write('\t\t"-I' .. unreal_engine_path .. secondary_path .. '",\n')
+	Module.utils.append_to_bottom_buffer(Module, {"Engine Include:\t\t" .. unreal_engine_path .. secondary_path})
 end
 
-function clangd.add_project_include_path(clangd_file, module_name)
+function clangd.add_project_include_path(Module, clangd_file, module_name)
 	clangd_file:write('\t\t"-I' .. vim.loop.cwd() .. '/Intermediate/Build/Linux/UnrealEditor/Inc/' .. module_name .. '/UHT",\n')
+	Module.utils.append_to_bottom_buffer(Module, {"Project Include:\t" .. vim.loop.cwd() .. '/Intermediate/Build/Linux/UnrealEditor/Inc/' .. module_name .. '/UHT'})
 end
 
-function clangd.create_clangd_file(options, clangd_options, project_modules)
+function clangd.create_clangd_file(Module)
+	local options = Module.config.options
+	local project_config = Module.config.project['config']
+	local clangd_options = project_config.clangd
+	local debug_flags = clangd_options.debug_flags
+	local project_modules = Module.config.project['module_names']
 	local clangd_file = io.open(vim.loop.cwd() .. "/.clangd", "w")
+
+	Module.utils.open_bottom_buffer(Module)
+
+	Module.utils.write_to_bottom_buffer(Module, {"Generating .clangd file"})
 
 	if clangd_file then
 		clangd_file:write('CompileFlags:\n')
 		clangd_file:write('\tAdd: [\n')
-		for debug_flag in clangd_options['debug_flags'] do
-			clangd.add_debug_flag(clangd_file, debug_flag)
+		
+		for _,debug_flag in ipairs(debug_flags) do
+			clangd.add_debug_flag(Module, clangd_file, debug_flag)
 		end
-		clangd.add_engine_include_path(clangd_file, options['unreal_engine_path'], '/Engine/Source/Runtime/Core/Public')
-		clangd.add_engine_include_path(clangd_file, options['unreal_engine_path'], '/Engine/Source/Runtime/Core/Private')
-		clangd.add_engine_include_path(clangd_file, options['unreal_engine_path'], '/Engine/Source/Runtime/Engine/Classes')
-		clangd.add_engine_include_path(clangd_file, options['unreal_engine_path'], '/Engine/Source/Runtime/Engine/Public')
-		clangd.add_engine_include_path(clangd_file, options['unreal_engine_path'], '/Engine/Source/Runtime/Engine/Private')
-		for module_name in project_modules do
-			clangd.add_project_include_path(clangd_file, module_name)
+		clangd.add_engine_include_path(Module, clangd_file, options['unreal_engine_path'], '/Engine/Source/Runtime/Core/Public')
+		clangd.add_engine_include_path(Module, clangd_file, options['unreal_engine_path'], '/Engine/Source/Runtime/Core/Private')
+		clangd.add_engine_include_path(Module, clangd_file, options['unreal_engine_path'], '/Engine/Source/Runtime/Engine/Classes')
+		clangd.add_engine_include_path(Module, clangd_file, options['unreal_engine_path'], '/Engine/Source/Runtime/Engine/Public')
+		clangd.add_engine_include_path(Module, clangd_file, options['unreal_engine_path'], '/Engine/Source/Runtime/Engine/Private')
+		for _,module_name in ipairs(project_modules) do
+			clangd.add_project_include_path(Module, clangd_file, module_name)
 		end
 		clangd_file:write('\t]')
 		clangd_file:close()
