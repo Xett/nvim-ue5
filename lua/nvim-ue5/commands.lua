@@ -11,10 +11,10 @@ end
 
 function commands.init(Module)
 
-	commands.augroup = vim.api.nvim_create_augroup("nvim-ue5", {})
+	Module.commands.augroup = vim.api.nvim_create_augroup("nvim-ue5", {})
 
-	commands.enter_command_id = vim.api.nvim_create_autocmd({"VimEnter", "DirChanged"}, {
-		group = commands.augroup,
+	Module.commands.enter_command_id = vim.api.nvim_create_autocmd({"VimEnter", "DirChanged"}, {
+		group = Module.commands.augroup,
 		pattern = "*",
 		callback = function(ev)
 			Module.scan()
@@ -43,7 +43,7 @@ function commands.init(Module)
 		end
 	})
 
-	commands.cpp_open_command_id = vim.api.nvim_create_autocmd({"BufReadPost"}, {
+	Module.commands.cpp_open_command_id = vim.api.nvim_create_autocmd({"BufReadPost"}, {
 		group = commands.augroup,
 		pattern = "*.cpp",
 		callback = function(ev)
@@ -51,7 +51,7 @@ function commands.init(Module)
 		end
 	})
 
-	commands.h_open_command_id = vim.api.nvim_create_autocmd({"BufReadPost"}, {
+	Module.commands.h_open_command_id = vim.api.nvim_create_autocmd({"BufReadPost"}, {
 		group = commands.augroup,
 		pattern = "*.h",
 		callback = function(ev)
