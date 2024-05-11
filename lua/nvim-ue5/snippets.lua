@@ -2,6 +2,145 @@ local snippets = {}
 
 local utils = require('nvim-ue5.utils')
 
+function snippets.bind(Module)
+	vim.api.nvim_create_user_command('UEClass',
+		function(opts)
+			local class_name = opts['fargs'][1]	--- First arguement is ALWAYS the class name (without the prefix)
+
+			local uclass_arguments_string = ''
+			local parent_classes_string = ''
+			
+			local arg2_type, arg2 = Module.commands.parse_named_command_argument(opts['fargs'][2])
+			if arg2_type == 'args' then
+				uclass_arguments_string = arg2
+			elseif arg2_type == 'parents' then
+				parent_classes_string = arg2 or 'UObject'
+			end
+
+			local arg3_type, arg3 = Module.commands.parse_named_command_argument(opts['fargs'][3])
+			if arg3_type == 'args' then
+				uclass_arguments_string = arg3
+			elseif arg3_type == 'parents' then
+				parent_classes_string = arg3 or 'UObject'
+			end
+
+			local uclass_arguments = Module.snippets.parse_macro_arguments_string(uclass_arguments_string)
+			local parent_classes = Module.utils.parse_comma_seperated(parent_classes_string)
+
+			Module.snippets.generate_class(class_name, uclass_arguments, parent_classes)
+		end,
+		{
+			nargs='*'
+		})
+	vim.api.nvim_create_user_command('UEActor',
+		function(opts)
+			local actor_name = opts['fargs'][1]
+
+			local uclass_arguments_string = ''
+			local parent_classes_string = ''
+
+			local arg2_type, arg2 = Module.commands.parse_named_command_argument(opts['fargs'][2])
+			if arg2_type == 'args' then
+				uclass_arguments_string = arg2
+			elseif arg2_type == 'parents' then
+				parent_classes_string = arg2 or 'AActor'
+			end
+
+			local arg3_type, arg3 = Module.commands.parse_named_command_argument(opts['fargs'][3])
+			if arg3_type == 'args' then
+				uclass_arguments_string = arg3
+			elseif arg3_type == 'parents' then
+				parent_classes_string = arg3 or 'AActor'
+			end
+
+			local uclass_arguments = Module.snippets.parse_macro_arguments_string(uclass_arguments_string)
+			local parent_classes = Module.utils.parse_comma_seperated(parent_classes_string)
+
+			Module.snippets.generate_actor(actor_name, uclass_arguments, parent_classes)
+		end,
+		{
+			nargs='*',
+		})
+
+	vim.api.nvim_create_user_command('UEStruct',
+		function(opts)
+			local struct_name = opts['fargs'][1]
+
+			local ustruct_arguments_string = ''
+			local parent_structs_string = ''
+
+			local arg2_type, arg2 = Module.commands.parse_named_command_argument(opts['fargs'][2])
+			if arg2_type == 'args' then
+				ustruct_arguments_string = arg2
+			elseif arg2_type == 'parents' then
+				parent_structs_string = arg2
+			end
+
+			local arg3_type, arg3 = Module.commands.parse_named_command_argument(opts['fargs'][3])
+			if arg3_type == 'args' then
+				ustruct_arguments_string = arg3
+			elseif arg3_type == 'parents' then
+				parent_structs_string = arg3
+			end
+
+			local ustruct_arguments = Module.snippets.parse_macro_arguments_string(ustruct_arguments_string)
+			local parent_structs = Module.snippets.parse_parent_classes(parent_struct_string)
+
+			Module.snippets.generate_struct(struct_name, ustruct_arguments, parent_structs)
+		end,
+		{
+			nargs='*',
+		})
+
+		vim.api.nvim_create_user_command('UEInterface',
+		function(opts)
+			local interface_name = opts['fargs'][1]
+
+			local uinterface_arguments = ''
+			local uinterface_parents = ''
+			local iinterface_parents = ''
+
+			local arg2_type, arg2 = Module.commands.parse_named_command_argument(opts['fargs'][2])
+			if arg2_type == 'args' then
+				uinterface_arguments = arg2
+			elseif arg2_type == 'uparents' then
+				uinterface_parents = arg2 or 'UInterface'
+			elseif arg2_type == 'iparents' then
+				iinterface_parents = arg2
+			end
+
+			local arg3_type, arg3 = Module.commands.parse_named_command_argument(opts['fargs'][3])
+			if arg3_type == 'args' then
+				uinterface_arguments = arg3
+			elseif arg3_type == 'uparents' then
+				uinterface_parents = arg3 or 'UInterface'
+			elseif arg3_type == 'iparents' then
+				iinterface_parents = arg3
+			end
+
+			local arg4_type, arg4 = Module.commands.parse_named_command_argument(opts['fargs'][4])
+			if arg4_type == 'args' then
+				uinterface_arguments = arg4
+			elseif arg4_type == 'uparents' then
+				uinterface_parents = arg4 or 'UInterface'
+			elseif arg4_type == 'iparents' then
+				iinterface_parents = arg4
+			end
+
+			Module.snippets.generate_interface(interface_name, uinterface_arguments, uinterface_parents, iinterface_parents)
+		end,
+		{
+			nargs='*',
+		})
+end
+
+function snippets.unbind(Module)
+	vim.api.nvim_del_user_command('UEClass')
+	vim.api.nvim_del_user_command('UEStruct')
+	vim.api.nvim_del_user_command('UEInterfact')
+	vim.api.nvim_del_user_command('UEActor')
+end
+
 function snippets.parse_macro_arguments(arguments)
 	local arguments_string = ""
 	local first_arg = true

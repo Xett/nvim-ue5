@@ -3,6 +3,18 @@ local info = {}
 info.win_id = nil
 info.last_win_id = nil
 
+function info.bind(Module)
+	vim.api.nvim_create_user_command('UEInfo',
+		function(opts)
+			Module.info.toggle_window(Module)
+		end,
+		{})
+end
+
+function info.unbind(Module)
+	vim.api.nvim_del_user_command('UEInfo')
+end
+
 function info.create_window(Module)	
 	local height = 20
 	local width = 50

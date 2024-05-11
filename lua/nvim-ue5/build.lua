@@ -2,6 +2,23 @@ local build = {}
 
 local utils = require("nvim-ue5.utils")
 
+function build.bind(Module)
+	vim.api.nvim_create_user_command('UEBuild',
+		function(opts)
+			local target = opts['fargs'][1] or "Development"
+			local target_type = opts['fargs'][2] or "Editor"
+			local platform = opts['fargs'][3] or Module.utils.get_current_platform()
+			Module.build.build(Module, target, target_type, platform)
+		end,
+		{
+			nargs='*',
+		})
+end
+
+function build.unbind(Module)
+	vim.api.nvim_del_user_command('UEBuild')
+end
+
 function build.build(Module, target, target_type, platform)
 	local config = Module.config
 	Module.bot_buf.open(Module)

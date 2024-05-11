@@ -1,6 +1,20 @@
 local headers = {}
 
-local utils = require("nvim-ue5.utils")
+function headers.bind(Module)
+	vim.api.nvim_create_user_command('UEGenerateHeaders',
+		function(opts)
+			local module_name = opts['fargs'][1]
+			local platform = opts['fargs'][2] or Module.utils.get_current_platform()
+			Module.headers.generate_header_files(Module, module_name, platform)
+		end,
+		{
+			nargs='*',
+		})
+end
+
+function headers.unbind(Module)
+	vim.api.nvim_del_user_command('UEGenerateHeaders')
+end
 
 function headers.generate_header_files(Module, module_name, platform)
 	local config = Module.config
@@ -15,7 +29,7 @@ function headers.generate_header_files(Module, module_name, platform)
 
 	Module.bot_buf.write(Module, {"Generating header files for " .. module_name})
 	
-	local command_string = utils.get_build_script_path(options) .. ' -Mode=UnrealHeaderTool "' .. target_string .. ' ' .. project_string .. '"'
+	local command_string = Module.utils.get_build_script_path(options) .. ' -Mode=UnrealHeaderTool "' .. target_string .. ' ' .. project_string .. '"'
 	
 	vim.fn.jobstart(
 		command_string,

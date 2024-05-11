@@ -21,6 +21,17 @@ nvim_ue5.loaded = false
 
 nvim_ue5.bot_buf = require("nvim-ue5.bot_buf")
 
+nvim_ue5.command_modules = {
+	nvim_ue5.clean,
+	nvim_ue5.generate,
+	nvim_ue5.clangd,
+	nvim_ue5.compile_commands,
+	nvim_ue5.headers,
+	nvim_ue5.build,
+	nvim_ue5.info,
+	nvim_ue5.snippets,
+}
+
 function nvim_ue5.setup(options)
 	nvim_ue5.config.setup(options)
 	nvim_ue5.commands.init(nvim_ue5)

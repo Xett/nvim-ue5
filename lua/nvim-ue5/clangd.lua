@@ -1,5 +1,17 @@
 local clangd = {}
 
+function clangd.bind(Module)
+	vim.api.nvim_create_user_command('UEGenerateClangd',
+		function(opts)
+			Module.clangd.create_clangd_file(Module)
+		end,
+		{})
+end
+
+function clangd.unbind(Module)
+	vim.api.nvim_del_user_command('UEGenerateClangd')
+end
+
 function clangd.add_debug_flag(Module, clangd_file, debug_flag)
 	clangd_file:write('\t\t"-D' .. debug_flag .. '",\n')
 	Module.bot_buf.write(Module, {"Flag:\t\t\t" .. debug_flag})

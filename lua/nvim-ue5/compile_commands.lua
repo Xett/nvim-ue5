@@ -1,5 +1,17 @@
 local compile_commands = {}
-local utils = require("nvim-ue5.utils")
+
+function compile_commands.bind(Module)
+	vim.api.nvim_create_user_command('UEGenerateCompileCommands',
+		function(opts)
+			Module.compile_commands.build_compile_commands(Module)
+		end,
+		{})
+end
+
+function compile_commands.unbind(Module)
+	vim.api.nvim_del_user_command('UEGenerateCompileCommands')
+end
+
 function compile_commands.get_engine_compile_commands_path(unreal_engine_path)
 	return unreal_engine_path .. "/.vscode/compileCommands_UE5.json"
 end

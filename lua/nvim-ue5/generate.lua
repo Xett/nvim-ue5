@@ -1,6 +1,16 @@
 local generate = {}
 
-local utils = require("nvim-ue5.utils")
+function generate.bind(Module)
+	vim.api.nvim_create_user_command('UEGenerateProject',
+		function(opts)
+			Module.generate.generate_project_files(Module)
+		end,
+		{})
+end
+
+function generate.unbind(Module)
+	vim.api.nvim_del_user_command('UEGenerateProject')
+end
 
 function generate.get_arguments_string(project_name)
 	return '-projectfiles -project="' .. vim.loop.cwd() .. '/' .. project_name .. '.uproject" -cmakefile -vscode -game -engine'
@@ -18,7 +28,7 @@ end
 function generate.generate_project_files(Module)
 	local options = Module.config.options
 	local project_name = Module.config.project['project_name']
-	local generate_project_script_path = utils.get_generated_script_path(options)
+	local generate_project_script_path = Module.utils.get_generated_script_path(options)
 	if not generate_project_script_path then
 		--- Unknown platform, raise an error?
 		return

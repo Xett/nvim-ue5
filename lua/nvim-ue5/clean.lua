@@ -1,5 +1,17 @@
 local clean = {}
 
+function clean.bind(Module)
+	vim.api.nvim_create_user_command('UEClean',
+		function(opts)
+			Module.clean.clean(Module)
+		end,
+		{})
+end
+
+function clean.unbind(Module)
+	vim.api.nvim_del_user_command('UEClean')
+end
+
 function clean.is_file_in_whitelist(file_path, whitelist)
 	local file_pattern = vim.regex('[^/]+$')
 	local file = vim.fn.matchstr('[^/]+$', file_path)
