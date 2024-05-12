@@ -27,7 +27,7 @@ end
 function compile_commands.build_compile_commands(Module)
 	local options = Module.config.options
 	local project_config = Module.config.project['config']
-	local project_name = Module.config.project['config_name']
+	local project_name = Module.config.project['project_name']
 
 	Module.bot_buf.open(Module)
 	Module.bot_buf.write(Module, {"Generating compile_commands.json..."})
