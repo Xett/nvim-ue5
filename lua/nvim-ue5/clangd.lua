@@ -19,12 +19,18 @@ end
 
 function clangd.add_engine_include_path(Module, clangd_file, unreal_engine_path, secondary_path)
 	clangd_file:write('\t\t"-I' .. unreal_engine_path .. secondary_path .. '",\n')
-	Module.bot_buf.write(Module, {"Engine Include:\t\t" .. unreal_engine_path .. secondary_path})
+	local string = "Engine Include:\t\t" .. unreal_engine_path .. secondary_path
+	Module.bot_buf.write(Module, {string})
+	local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
+	Module.highlights.highlight_paths(Module, string, num_lines)
 end
 
 function clangd.add_project_include_path(Module, clangd_file, module_name)
 	clangd_file:write('\t\t"-I' .. vim.loop.cwd() .. '/Intermediate/Build/Linux/UnrealEditor/Inc/' .. module_name .. '/UHT",\n')
-	Module.bot_buf.write(Module, {"Project Include:\t" .. vim.loop.cwd() .. '/Intermediate/Build/Linux/UnrealEditor/Inc/' .. module_name .. '/UHT'})
+	local string = "Project Include:\t" .. vim.loop.cwd() .. '/Intermediate/Build/Linux/UnrealEditor/Inc/' .. module_name .. '/UHT'
+	Module.bot_buf.write(Module, {string})
+	local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
+	Module.highlights.highlight_paths(Module, string, num_lines)
 end
 
 function clangd.create_clangd_file(Module)
@@ -56,6 +62,10 @@ function clangd.create_clangd_file(Module)
 		end
 		clangd_file:write('\t]')
 		clangd_file:close()
+
+		Module.bot_buf.write(Module, {"Finished..."})
+		local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
+		Module.highlights.highlight_success(Module, num_lines)
 	end
 
 

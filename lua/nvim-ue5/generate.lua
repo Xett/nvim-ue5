@@ -13,16 +13,7 @@ function generate.unbind(Module)
 end
 
 function generate.get_arguments_string(project_name)
-	return '-projectfiles -project="' .. vim.loop.cwd() .. '/' .. project_name .. '.uproject" -cmakefile -vscode -game -engine'
-end
-
-function generate.parse_output(chan_id, data, name)
-	local last_key, last_value
-	for key, value in pairs(data) do
-		if value ~= ' 100%' and value ~= '\t' and value ~='' then
-			print('UEGenerateProject:', value)
-		end
-	end
+	return '-projectfiles -project="' .. vim.loop.cwd() .. '/' .. project_name .. '.uproject" -game -engine'
 end
 
 function generate.generate_project_files(Module)
@@ -45,13 +36,21 @@ function generate.generate_project_files(Module)
 			on_exit = function(job_id, code, event)
 				if event == 'exit' and code == 0 then
 					Module.bot_buf.write(Module, {"Project generated"})
+					local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
+					Module.highlights.highlight_success(Module, num_lines)
 				else
 					Module.bot_buf.write(Module, {"Project failed to generate..."})
+					local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
+					Module.highlights.highlight_fail(Module, num_lines)
 				end
 			end,
 			on_stdout = function(chan_id, data, name)
 				for key, value in pairs(data) do
 					Module.bot_buf.write(Module, {value})
+					local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
+					Module.highlights.highlight_paths(Module, value, num_lines)
+					Module.highlights.highlight_seconds(Module, value, num_lines)
+					Module.highlights.highlight_module_names(Module, value, num_lines)
 				end
 			end
 		}
