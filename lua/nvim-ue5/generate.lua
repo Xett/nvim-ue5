@@ -25,8 +25,8 @@ function generate.generate_project_files(Module)
 		return
 	end
 
-	Module.bot_buf.open(Module)
-	Module.bot_buf.write(Module, {"Generating project files"})
+	Module.log.open(Module)
+	Module.log.write(Module, {"Generating project files"})
 
 	local command_string = generate_project_script_path .. " " .. generate.get_arguments_string(project_name)
 	
@@ -35,19 +35,19 @@ function generate.generate_project_files(Module)
 		{
 			on_exit = function(job_id, code, event)
 				if event == 'exit' and code == 0 then
-					Module.bot_buf.write(Module, {"Project generated"})
-					local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
+					Module.log.write(Module, {"Project generated"})
+					local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
 					Module.highlights.highlight_success(Module, num_lines)
 				else
-					Module.bot_buf.write(Module, {"Project failed to generate..."})
-					local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
+					Module.log.write(Module, {"Project failed to generate..."})
+					local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
 					Module.highlights.highlight_fail(Module, num_lines)
 				end
 			end,
 			on_stdout = function(chan_id, data, name)
 				for key, value in pairs(data) do
-					Module.bot_buf.write(Module, {value})
-					local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
+					Module.log.write(Module, {value})
+					local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
 					Module.highlights.highlight_paths(Module, value, num_lines)
 					Module.highlights.highlight_seconds(Module, value, num_lines)
 					Module.highlights.highlight_module_names(Module, value, num_lines)

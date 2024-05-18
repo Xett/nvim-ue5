@@ -18,15 +18,15 @@ function highlights.create_groups(Module)
 end
 
 function highlights.highlight_line(Module, highlight_group, num_lines)
-	vim.api.nvim_buf_add_highlight(Module.bot_buf.id, Module.highlights.namespace_id, highlight_group, num_lines-1, 0, -1)
+	vim.api.nvim_buf_add_highlight(Module.log.id, Module.highlights.namespace_id, highlight_group, num_lines-1, 0, -1)
 end
 
 function highlights.highlight_success(Module, num_lines)
-	vim.api.nvim_buf_add_highlight(Module.bot_buf.id, Module.highlights.namespace_id, 'UE5Success', num_lines-1, 0, -1)
+	vim.api.nvim_buf_add_highlight(Module.log.id, Module.highlights.namespace_id, 'UE5Success', num_lines-1, 0, -1)
 end
 
 function highlights.highlight_fail(Module, num_lines)
-	vim.api.nvim_buf_add_highlight(Module.bot_buf.id, Module.highlights.namespace_id, 'UE5Fail', num_lines-1, 0, -1)
+	vim.api.nvim_buf_add_highlight(Module.log.id, Module.highlights.namespace_id, 'UE5Fail', num_lines-1, 0, -1)
 end
 
 function highlights.highlight_paths(Module, line, num_lines)
@@ -49,7 +49,7 @@ function highlights.highlight_paths(Module, line, num_lines)
 			end
 		end
 		for i, value in ipairs(matches) do
-			vim.api.nvim_buf_add_highlight(Module.bot_buf.id, Module.highlights.namespace_id, 'UE5Path', num_lines-1, value[1], value[2])
+			vim.api.nvim_buf_add_highlight(Module.log.id, Module.highlights.namespace_id, 'UE5Path', num_lines-1, value[1], value[2])
 		end
 	end
 end
@@ -58,12 +58,12 @@ function highlights.highlight_seconds(Module, string, num_lines)
 	local seconds_pattern = vim.regex('\\([0-9]\\)\\+\\.\\([0-9]\\)\\+ seconds')
 	local start_idx, end_idx = seconds_pattern:match_str(string)
 	if type(start_idx) == 'number' then
-		vim.api.nvim_buf_add_highlight(Module.bot_buf.id, Module.highlights.namespace_id, 'UE5Seconds', num_lines-1, start_idx, end_idx)
+		vim.api.nvim_buf_add_highlight(Module.log.id, Module.highlights.namespace_id, 'UE5Seconds', num_lines-1, start_idx, end_idx)
 	end
 end
 
 function highlights.highlight_module_name(Module, num_lines, start_idx, end_idx)
-	vim.api.nvim_buf_add_highlight(Module.bot_buf.id, Module.highlights.namespace_id, 'UE5ModuleName', num_lines-1, start_idx, end_idx)
+	vim.api.nvim_buf_add_highlight(Module.log.id, Module.highlights.namespace_id, 'UE5ModuleName', num_lines-1, start_idx, end_idx)
 end
 
 function highlights.highlight_module_names(Module, string, num_lines)
@@ -73,7 +73,7 @@ function highlights.highlight_module_names(Module, string, num_lines)
 		local target_module_name_pattern = vim.regex('[A-Za-z]*')
 		local new_start_idx, new_end_idx = target_module_name_pattern:match_str(string:sub(end_idx+1))
 		if type(new_start_idx) == 'number' then
-			vim.api.nvim_buf_add_highlight(Module.bot_buf.id, Module.highlights.namespace_id, 'UE5ModuleName', num_lines-1, end_idx, new_end_idx+end_idx)
+			vim.api.nvim_buf_add_highlight(Module.log.id, Module.highlights.namespace_id, 'UE5ModuleName', num_lines-1, end_idx, new_end_idx+end_idx)
 		end
 	end
 
@@ -83,7 +83,7 @@ function highlights.highlight_module_names(Module, string, num_lines)
 		local module_name_pattern = vim.regex('[A-Za-z]*')
 		local new_start_idx, new_end_idx = module_name_pattern:match_str(string:sub(end_idx+1))
 		if type(new_start_idx) == 'number' then
-			vim.api.nvim_buf_add_highlight(Module.bot_buf.id, Module.highlights.namespace_id, 'UE5ModuleName', num_lines-1, end_idx, new_end_idx+end_idx)
+			vim.api.nvim_buf_add_highlight(Module.log.id, Module.highlights.namespace_id, 'UE5ModuleName', num_lines-1, end_idx, new_end_idx+end_idx)
 		end
 	end	
 end

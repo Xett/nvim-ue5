@@ -49,8 +49,8 @@ function clean.delete_all_mode(Module, path, whitelist, recursive)
 			local file_path = path .. '/' .. name
 			if file_type ~= "directory" and not clean.is_file_in_whitelist(file_path, whitelist) then
 				local string = "\t\tDeleting " .. file_path
-				Module.bot_buf.write(Module, {string})
-				local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
+				Module.log.write(Module, {string})
+				local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
 				Module.highlights.highlight_paths(Module, string, num_lines)
 				os.remove(file_path)
 			elseif file_type == "directory" and recursive then
@@ -67,8 +67,8 @@ function clean.delete_specific_mode(Module, path, whitelist, files_to_delete)
 			local success, err_msg = os.remove(file_path)
 			if success then
 				local string = "\t\tDeleting ".. whitelist_entry
-				Module.bot_buf.write(Module, {string})
-				local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
+				Module.log.write(Module, {string})
+				local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
 				Module.highlights.highlight_paths(Module, string, num_lines)
 			end
 		end
@@ -77,22 +77,22 @@ end
 
 function clean.clean_dir(Module, path, config, recursive)
 	local string = "Cleaning " .. path
-	Module.bot_buf.write(Module, {string})
-	local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
+	Module.log.write(Module, {string})
+	local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
 	Module.highlights.highlight_paths(Module, string, num_lines)
 	if recursive == nil then
 		recursive = true
 	end
 	if config.mode=="delete_all" then
 		local string = "\tMode is Delete All"
-		Module.bot_buf.write(Module, {string})
-		local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
+		Module.log.write(Module, {string})
+		local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
 		Module.highlights.highlight_line(Module, 'UE5CleaningModeAll', num_lines)
 		clean.delete_all_mode(Module, path, config.whitelist_files, recursive)
 	elseif config.mode=="delete_specific" then
 		local string = "\tMode is Delete Specific"
-		Module.bot_buf.write(Module, {string})
-		local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
+		Module.log.write(Module, {string})
+		local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
 		Module.highlights.highlight_line(Module, 'UE5CleaningModeSpecific', num_lines)
 		clean.delete_specific_mode(Module, path, config.whitelist_files, config.files_to_delete)
 	end
@@ -104,8 +104,8 @@ function clean.clean(Module)
 		Module.clean.create_highlight_groups(Module)
 	end
 
-	Module.bot_buf.open(Module)
-	Module.bot_buf.write(Module, {"Cleaning project directory..."})
+	Module.log.open(Module)
+	Module.log.write(Module, {"Cleaning project directory..."})
 	local clean_map = Module.config.project.config['clean_map']
 	--- Iterate through the cleaning map
 	for dir, config in pairs(clean_map) do

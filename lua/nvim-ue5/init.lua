@@ -19,7 +19,7 @@ nvim_ue5.utils = require("nvim-ue5.utils")
 
 nvim_ue5.loaded = false
 
-nvim_ue5.bot_buf = require("nvim-ue5.bot_buf")
+nvim_ue5.log = require("nvim-ue5.log")
 
 nvim_ue5.highlights = require("nvim-ue5.highlights")
 

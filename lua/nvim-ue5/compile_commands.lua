@@ -46,10 +46,10 @@ function compile_commands.build_compile_commands(Module)
 	local project_config = Module.config.project['config']
 	local project_name = Module.config.project['project_name']
 
-	Module.bot_buf.open(Module)
-	Module.bot_buf.write(Module, {"Generating compile_commands.json..."})
-	local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
-	vim.api.nvim_buf_add_highlight(Module.bot_buf.id, Module.compile_commands.hl_namespace_id, 'UE5CompileCommandsPath', num_lines-1, 11, 32)
+	Module.log.open(Module)
+	Module.log.write(Module, {"Generating compile_commands.json..."})
+	local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
+	vim.api.nvim_buf_add_highlight(Module.log.id, Module.compile_commands.hl_namespace_id, 'UE5CompileCommandsPath', num_lines-1, 11, 32)
 
 	local flags = " "
 	local compile_commands = project_config['compile_commands']
@@ -65,15 +65,15 @@ function compile_commands.build_compile_commands(Module)
 		{
 			on_exit = function(job_id, code, event)
 				if event == 'exit' and code == 0 then
-					Module.bot_buf.write(Module, {"compile_commands.json generated!"})
-					local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
-					vim.api.nvim_buf_add_highlight(Module.bot_buf.id, Module.compile_commands.hl_namespace_id, 'UE5CompileCommandsPath', num_lines-1, 0, 21)
-					vim.api.nvim_buf_add_highlight(Module.bot_buf.id, Module.compile_commands.hl_namespace_id, 'UE5CompileCommandsSuccess', num_lines-1, 22, -1)
+					Module.log.write(Module, {"compile_commands.json generated!"})
+					local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
+					vim.api.nvim_buf_add_highlight(Module.log.id, Module.compile_commands.hl_namespace_id, 'UE5CompileCommandsPath', num_lines-1, 0, 21)
+					vim.api.nvim_buf_add_highlight(Module.log.id, Module.compile_commands.hl_namespace_id, 'UE5CompileCommandsSuccess', num_lines-1, 22, -1)
 				else
-					Module.bot_buf.write(Module, {"Failed to generate compile_commands.json..."})
-					local num_lines = vim.api.nvim_buf_line_count(Module.bot_buf.id)
-					vim.api.nvim_buf_add_highlight(Module.bot_buf.id, Module.compile_commands.hl_namespace_id, 'UE5CompileCommandsFail', num_lines-1, 0, 18)
-					vim.api.nvim_buf_add_highlight(Module.bot_buf.id, Module.compile_commands.hl_namespace_id, 'UE5CompileCommandsPath', num_lines-1, 19, 40)
+					Module.log.write(Module, {"Failed to generate compile_commands.json..."})
+					local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
+					vim.api.nvim_buf_add_highlight(Module.log.id, Module.compile_commands.hl_namespace_id, 'UE5CompileCommandsFail', num_lines-1, 0, 18)
+					vim.api.nvim_buf_add_highlight(Module.log.id, Module.compile_commands.hl_namespace_id, 'UE5CompileCommandsPath', num_lines-1, 19, 40)
 				end
 			end
 		}
