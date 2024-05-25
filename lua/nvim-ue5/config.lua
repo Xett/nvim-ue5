@@ -69,9 +69,7 @@ local default_project_config = {
 		},
 	},
 	clangd = {
-		debug_flags = {
-			'__INTELLISENSE__=1',
-		}
+		debug_flags = {}
 	},
 	compile_commands = {
 		flags = {
