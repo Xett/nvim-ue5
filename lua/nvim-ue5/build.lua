@@ -10,6 +10,7 @@ function build.bind(Module)
 		end,
 		{
 			nargs='*',
+			desc="Build the project, takes the target (defaults to Development), the target type (defaults to Editor) and the platform (defaults to the current platform)",
 		})
 end
 

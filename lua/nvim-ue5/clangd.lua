@@ -5,7 +5,9 @@ function clangd.bind(Module)
 		function(opts)
 			Module.clangd.create_clangd_file(Module)
 		end,
-		{})
+		{
+			desc="Generate the .clangd file, requires the project to be generated for vscode",	
+		})
 end
 
 function clangd.unbind(Module)

@@ -7,7 +7,9 @@ function compile_commands.bind(Module)
 		function(opts)
 			Module.compile_commands.build_compile_commands(Module)
 		end,
-		{})
+		{
+			desc="Generates compile_commands.json, requires that jq is installed, the project was generated with the VSCode option and that the Unreal Engine source has a compile_commands.json too.",	
+		})
 end
 
 function compile_commands.unbind(Module)

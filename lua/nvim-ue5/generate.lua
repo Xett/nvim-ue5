@@ -5,7 +5,9 @@ function generate.bind(Module)
 		function(opts)
 			Module.generate.generate_project_files(Module)
 		end,
-		{})
+		{
+			desc="Generate the project files",	
+		})
 end
 
 function generate.unbind(Module)

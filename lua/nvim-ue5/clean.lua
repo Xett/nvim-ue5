@@ -7,7 +7,9 @@ function clean.bind(Module)
 		function(opts)
 			Module.clean.clean(Module)
 		end,
-		{})
+		{
+			desc="Cleans the directory, according to the clean map config",			
+		})
 end
 
 function clean.unbind(Module)

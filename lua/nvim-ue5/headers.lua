@@ -9,6 +9,7 @@ function headers.bind(Module)
 		end,
 		{
 			nargs='*',
+			desc="Generate project headers, requires a specified Module Name, and takes the platform (defaults to the current platform)",	
 		})
 end
 

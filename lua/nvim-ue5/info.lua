@@ -8,7 +8,9 @@ function info.bind(Module)
 		function(opts)
 			Module.info.toggle_window(Module)
 		end,
-		{})
+		{
+			desc="Displays plugin information such as the Engine Path, the Project Name, Module Names and Build Targets",	
+		})
 end
 
 function info.unbind(Module)
