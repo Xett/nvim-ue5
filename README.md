@@ -178,7 +178,7 @@ return {
 |UEClean|Removes files from the project according to the project configuration.|```UEClean```||
 |UEGenerateProject|Generates the project files.|```UEGenerateProject```||
 |UEBuild|Builds the project using the UBT.|```UEBuild [Target] [Target Type] [Platform]```|Target: ```Development```<br />Target Type: ```Editor```<br />Platform: ```Current Platform```|
-|UEGenerateHeaders|This command generates the header files using the UBT.|```UEGenerateHeaders [Module Name] [Platform]```|Platform: ```Current Platform```|
+|UEGenerateHeaders|This command generates the header files using the UBT.|```UEGenerateHeaders [Module Name] [Platform] [Target]```|Platform: ```Current Platform```<br />Target: ```Development```|
 
 ## LSP Integration
 |Command|Description|Usage|

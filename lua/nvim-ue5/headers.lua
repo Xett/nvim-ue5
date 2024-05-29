@@ -4,12 +4,28 @@ function headers.bind(Module)
 	vim.api.nvim_create_user_command('UEGenerateHeaders',
 		function(opts)
 			local module_name = opts['fargs'][1]
+			if not Module.utils.module_name_is_valid(Module, module_name) then
+				vim.api.nvim_err_writeln("Invalid module name")
+				return
+			end
+
 			local platform = opts['fargs'][2] or Module.utils.get_current_platform()
-			Module.headers.generate_header_files(Module, module_name, platform)
+			if not Module.utils.platform_is_valid(Module, platform) then
+				vim.api.nvim_err_writeln("Invalid platform")
+				return
+			end
+
+			local target = opts['fargs'][3] or 'Development'
+			if not Module.utils.target_is_valid(Module, target) then
+				vim.api.nvim_err_writeln("Invalid target")
+				return
+			end
+
+			Module.headers.generate_header_files(Module, module_name, platform, target)
 		end,
 		{
 			nargs='*',
-			desc="Generate project headers, requires a specified Module Name, and takes the platform (defaults to the current platform)",	
+			desc="Generate project headers, requires a specified Module Name, takes the platform (defaults to the current platform) and the target (defaults to Development)",	
 		})
 end
 
@@ -17,7 +33,7 @@ function headers.unbind(Module)
 	vim.api.nvim_del_user_command('UEGenerateHeaders')
 end
 
-function headers.generate_header_files(Module, module_name, platform)
+function headers.generate_header_files(Module, module_name, platform, target)
 	local config = Module.config
 
 	Module.log.open(Module)
@@ -26,7 +42,7 @@ function headers.generate_header_files(Module, module_name, platform)
 	local project_name = config.project['project_name']
 
 	local project_string = '-Project=' .. vim.loop.cwd() .. '/' .. project_name .. '.uproject'
-	local target_string = '-Target=' .. module_name .. ' ' .. platform .. ' Development'
+	local target_string = '-Target=' .. module_name .. ' ' .. platform .. ' ' .. target
 
 	Module.log.write(Module, {"Generating header files for " .. module_name})
 	local num_lines = vim.api.nvim_buf_line_count(Module.log.id)

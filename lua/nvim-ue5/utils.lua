@@ -66,7 +66,7 @@ end
 
 function utils.get_tabs_string()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
-	local tabstop = vim.api.nvim_bug_get_option(0, 'tabstop')
+	local tabstop = vim.api.nvim_buf_get_option(0, 'tabstop')
 	local virtrow = cursor_pos[1]
 	local virtcol = cursor_pos[2]
 
@@ -87,6 +87,46 @@ function utils.get_tabs_string()
 	end
 
 	return tabs_string
+end
+
+function utils.module_name_is_valid(Module, module_name)	
+	for _, element in ipairs(Module.config.project.module_names) do
+		if element == module_name then
+			return true
+		end
+	end
+
+	return false
+end
+
+function utils.target_is_valid(Module, target)
+	for _, element in ipairs(Module.config.project.build_targets) do
+		if element == target then
+			return true
+		end
+	end
+
+	return false
+end
+
+function utils.target_type_is_valid(Module, target_type)
+	for _, element in ipairs(Module.config.project.build_target_types) do
+		if element == target then
+			return true
+		end
+	end
+
+	return false
+end
+
+function utils.platform_is_valid(Module, platform)
+	for _, element in ipairs(Module.config.project.platforms) do
+		if element == platform then
+			return true
+		end
+	end
+
+	return false
 end
 
 return utils

@@ -5,23 +5,42 @@ local utils = require('nvim-ue5.utils')
 function snippets.bind(Module)
 	vim.api.nvim_create_user_command('UEClass',
 		function(opts)
-			local class_name = opts['fargs'][1]	--- First arguement is ALWAYS the class name (without the prefix)
+			local class_name = opts['fargs'][1]	--- First argument is ALWAYS the class name (without the prefix)
+
+			if class_name == nil or class_name == '' then
+				vim.api.nvim_err_writeln("Missing class name")
+				return
+			end
 
 			local uclass_parameters_string = ''
 			local parent_classes_string = ''
-			
-			local arg2_type, arg2 = Module.commands.parse_named_command_argument(opts['fargs'][2])
-			if arg2_type == 'params' then
-				uclass_parameters_string = arg2
-			elseif arg2_type == 'parents' then
-				parent_classes_string = arg2 or 'UObject'
+
+			if opts['fargs'][2] ~= nil then
+				local arg2_type, arg2 = Module.commands.parse_named_command_argument(opts['fargs'][2])
+				if arg2_type == 'params' then
+					uclass_parameters_string = arg2
+				elseif arg2_type == 'parents' then
+					parent_classes_string = arg2 or 'UObject'
+				else
+					vim.api.nvim_err_writeln(arg2_type .. " is not recognised")
+					return
+				end
 			end
 
-			local arg3_type, arg3 = Module.commands.parse_named_command_argument(opts['fargs'][3])
-			if arg3_type == 'params' then
-				uclass_parameters_string = arg3
-			elseif arg3_type == 'parents' then
-				parent_classes_string = arg3 or 'UObject'
+			if opts['fargs'][3] ~= nil then
+				local arg3_type, arg3 = Module.commands.parse_named_command_argument(opts['fargs'][3])
+				if arg3_type == 'params' then
+					uclass_parameters_string = arg3
+				elseif arg3_type == 'parents' then
+					parent_classes_string = arg3 or 'UObject'
+				else
+					vim.api.nvim_err_writelin(arg3_type .. " is not recognised")
+					return
+				end
+			end
+
+			if parent_classes_string == '' then
+				parent_classes_string = 'UObject'
 			end
 
 			local uclass_parameters = Module.snippets.parse_macro_parameters_string(uclass_parameters_string)
@@ -37,21 +56,34 @@ function snippets.bind(Module)
 		function(opts)
 			local actor_name = opts['fargs'][1]
 
+			if class_name == nil or class_name == '' then
+				vim.api.nvim_err_writeln("Missing class name")
+				return
+			end
+
 			local uclass_parameters_string = ''
 			local parent_classes_string = ''
 
-			local arg2_type, arg2 = Module.commands.parse_named_command_argument(opts['fargs'][2])
-			if arg2_type == 'params' then
-				uclass_parameters_string = arg2
-			elseif arg2_type == 'parents' then
-				parent_classes_string = arg2 or 'AActor'
+			if opts['fargs'][2] ~= nil then
+				local arg2_type, arg2 = Module.commands.parse_named_command_argument(opts['fargs'][2])
+				if arg2_type == 'params' then
+					uclass_parameters_string = arg2
+				elseif arg2_type == 'parents' then
+					parent_classes_string = arg2 or 'AActor'
+				end
 			end
 
-			local arg3_type, arg3 = Module.commands.parse_named_command_argument(opts['fargs'][3])
-			if arg3_type == 'params' then
-				uclass_parameters_string = arg3
-			elseif arg3_type == 'parents' then
-				parent_classes_string = arg3 or 'AActor'
+			if opts['fargs'][3] ~= nil then
+				local arg3_type, arg3 = Module.commands.parse_named_command_argument(opts['fargs'][3])
+				if arg3_type == 'params' then
+					uclass_parameters_string = arg3
+				elseif arg3_type == 'parents' then
+					parent_classes_string = arg3 or 'AActor'
+				end
+			end
+
+			if parent_classes_string == '' then
+				parent_classes_string = 'AActor'
 			end
 
 			local uclass_parameters = Module.snippets.parse_macro_parameters_string(uclass_parameters_string)
@@ -68,21 +100,30 @@ function snippets.bind(Module)
 		function(opts)
 			local struct_name = opts['fargs'][1]
 
+			if struct_name == nil or struct_name == '' then
+				vim.api.nvim_err_writeln("Missing struct name")
+				return
+			end
+
 			local ustruct_parameters_string = ''
 			local parent_structs_string = ''
 
-			local arg2_type, arg2 = Module.commands.parse_named_command_argument(opts['fargs'][2])
-			if arg2_type == 'params' then
-				ustruct_parameters_string = arg2
-			elseif arg2_type == 'parents' then
-				parent_structs_string = arg2
+			if opts['fargs'][2] ~= nil then
+				local arg2_type, arg2 = Module.commands.parse_named_command_argument(opts['fargs'][2])
+				if arg2_type == 'params' then
+					ustruct_parameters_string = arg2
+				elseif arg2_type == 'parents' then
+					parent_structs_string = arg2
+				end
 			end
 
-			local arg3_type, arg3 = Module.commands.parse_named_command_argument(opts['fargs'][3])
-			if arg3_type == 'params' then
-				ustruct_parameters_string = arg3
-			elseif arg3_type == 'parents' then
-				parent_structs_string = arg3
+			if opts['fargs'][3] ~= nil then
+				local arg3_type, arg3 = Module.commands.parse_named_command_argument(opts['fargs'][3])
+				if arg3_type == 'params' then
+					ustruct_parameters_string = arg3
+				elseif arg3_type == 'parents' then
+					parent_structs_string = arg3
+				end
 			end
 
 			local ustruct_parameters = Module.snippets.parse_macro_parameters_string(ustruct_parameters_string)
@@ -99,35 +140,50 @@ function snippets.bind(Module)
 		function(opts)
 			local interface_name = opts['fargs'][1]
 
+			if interface_name == nil or interface_name == '' then
+				vim.api.nvim_err_writeln("Missing interface name")
+				return
+			end
+
 			local uinterface_parameters = ''
 			local uinterface_parents = ''
 			local iinterface_parents = ''
 
-			local arg2_type, arg2 = Module.commands.parse_named_command_argument(opts['fargs'][2])
-			if arg2_type == 'args' then
-				uinterface_parameters = arg2
-			elseif arg2_type == 'uparents' then
-				uinterface_parents = arg2 or 'UInterface'
-			elseif arg2_type == 'iparents' then
-				iinterface_parents = arg2
+			if opts['fargs'][2] ~= nil then
+				local arg2_type, arg2 = Module.commands.parse_named_command_argument(opts['fargs'][2])
+				if arg2_type == 'args' then
+					uinterface_parameters = arg2
+				elseif arg2_type == 'uparents' then
+					uinterface_parents = arg2 or 'UInterface'
+				elseif arg2_type == 'iparents' then
+					iinterface_parents = arg2
+				end
 			end
 
-			local arg3_type, arg3 = Module.commands.parse_named_command_argument(opts['fargs'][3])
-			if arg3_type == 'args' then
-				uinterface_parameters = arg3
-			elseif arg3_type == 'uparents' then
-				uinterface_parents = arg3 or 'UInterface'
-			elseif arg3_type == 'iparents' then
-				iinterface_parents = arg3
+			if opts['fargs'][3] ~= nil then
+				local arg3_type, arg3 = Module.commands.parse_named_command_argument(opts['fargs'][3])
+				if arg3_type == 'args' then
+					uinterface_parameters = arg3
+				elseif arg3_type == 'uparents' then
+					uinterface_parents = arg3 or 'UInterface'
+				elseif arg3_type == 'iparents' then
+					iinterface_parents = arg3
+				end
 			end
 
-			local arg4_type, arg4 = Module.commands.parse_named_command_argument(opts['fargs'][4])
-			if arg4_type == 'args' then
-				uinterface_parameters = arg4
-			elseif arg4_type == 'uparents' then
-				uinterface_parents = arg4 or 'UInterface'
-			elseif arg4_type == 'iparents' then
-				iinterface_parents = arg4
+			if opts['fargs'][4] ~= nil then
+				local arg4_type, arg4 = Module.commands.parse_named_command_argument(opts['fargs'][4])
+				if arg4_type == 'args' then
+					uinterface_parameters = arg4
+				elseif arg4_type == 'uparents' then
+					uinterface_parents = arg4 or 'UInterface'
+				elseif arg4_type == 'iparents' then
+					iinterface_parents = arg4
+				end
+			end
+
+			if uinterface_parents == '' then
+				uinterface_parents = 'UInterface'
 			end
 
 			Module.snippets.generate_interface(interface_name, uinterface_parameters, uinterface_parents, iinterface_parents)

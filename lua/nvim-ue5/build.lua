@@ -4,8 +4,23 @@ function build.bind(Module)
 	vim.api.nvim_create_user_command('UEBuild',
 		function(opts)
 			local target = opts['fargs'][1] or "Development"
+			if not Module.utils.target_is_valid(Module, target) then
+				vim.api.nvim_err_writeln("Invalid build target")
+				return
+			end
+
 			local target_type = opts['fargs'][2] or "Editor"
+			if not Module.utils.target_type_is_valid(Module, target_type) then
+				vim.api.nvim_err_writeln("Invalid build target type")
+				return
+			end
+
 			local platform = opts['fargs'][3] or Module.utils.get_current_platform()
+			if not Module.utils.platform_is_valid(Module, platform) then
+				vim.api.nvim_err_writeln("Invalid platform")
+				return
+			end
+
 			Module.build.build(Module, target, target_type, platform)
 		end,
 		{

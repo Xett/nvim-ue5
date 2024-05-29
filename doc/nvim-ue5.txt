@@ -215,8 +215,8 @@ COMMANDS											*nvim-ue5-commands*
 	Project Management
 ----------------------------------------------------------------------------------------------------------------------------
 
-:UEClean				This command removes files from the project,
-					according to the project configurations.
+:UEClean				This command removes files from the project, according to the project
+					configurations.
 					Usage:
 						UEClean
 
@@ -229,10 +229,9 @@ COMMANDS											*nvim-ue5-commands*
 					Usage:
 						UEBuild [Target] [Target Type] [Platform]
 
-:UEGenerateHeaders			This command generates the header files using the
-					UnrealBuildTool.
+:UEGenerateHeaders			This command generates the header files using the UnrealBuildTool.
 					Usage:
-						UEGenerateHeaders [Module Name] [Platform]
+						UEGenerateHeaders [Module Name] [Platform] [Target]
 
 	LSP Integration
 ----------------------------------------------------------------------------------------------------------------------------

@@ -87,7 +87,24 @@ local default_project_config = {
 local default_project = {
 	project_name = '',
 	module_names = {},
-	build_targets = {},
+	build_targets = {
+		"Debug",
+		"DebugGame",
+		"Test",
+		"Shipping",
+		"Development"
+	},
+	build_target_types = {
+		"Game",
+		"Client",
+		"Server",
+		"Editor",
+		"Program"
+	},
+	platforms = {
+		"Linux",
+		"Win64"
+	},
 	config = default_project_config,
 }
 
