@@ -41,8 +41,10 @@ function commands.init(Module)
 			}
 			vim.cmd([[ LspRestart ]])
 		end
-	})
+	})	
+end
 
+function commands.bind(Module)
 	Module.commands.cpp_open_command_id = vim.api.nvim_create_autocmd({"BufReadPost"}, {
 		group = commands.augroup,
 		pattern = "*.cpp",
@@ -58,9 +60,15 @@ function commands.init(Module)
 			vim.cmd("set filetype=cpp_ue5")
 		end
 	})
-end
 
-function commands.bind(Module)
+	Module.commands.ini_open_command_id = vim.api.nvim_create_autocmd({"BufReadPost"}, {
+		group = commands.augroup,
+		pattern = "*.ini",
+		callback = function(ev)
+			vim.cmd("set filetype=ini_ue5")
+		end
+	})
+
 	if not commands.is_bound then
 		for _, mod in ipairs(Module.command_modules) do
 			mod.bind(Module)
@@ -71,6 +79,9 @@ function commands.bind(Module)
 end
 
 function commands.unbind(Module)
+	vim.api.nvim_del_autocmd(Module.commands.cpp_open_command_id)
+	vim.api.nvim_del_autocmd(Module.commands.h_open_command_id)
+	vim.api.nvim_del_autocmd(Module.commands.ini_open_command_id)
 	if commands.is_bound then
 		for _, mod in ipairs(Module.command_modules) do
 			mod.unbind(Module)
