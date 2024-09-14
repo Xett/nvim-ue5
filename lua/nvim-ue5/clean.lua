@@ -101,10 +101,10 @@ function clean.clean_dir(Module, path, config, recursive)
 end
 
 function clean.clean(Module)
-	if Module.clean.hl_namepsace_id == nil then
-		Module.clean.create_ns_id(Module)
-		Module.clean.create_highlight_groups(Module)
-	end
+	---if Module.clean.hl_namepsace_id == nil then
+	---	Module.clean.create_ns_id(Module)
+	---	Module.clean.create_highlight_groups(Module)
+	---end
 
 	Module.log.open(Module)
 	Module.log.write(Module, {"Cleaning project directory..."})
