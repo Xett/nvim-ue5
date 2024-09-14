@@ -89,9 +89,9 @@ function utils.get_tabs_string()
 	return tabs_string
 end
 
-function utils.module_name_is_valid(Module, module_name)	
+function utils.module_name_is_valid(Module, module_name)
 	for _, element in ipairs(Module.config.project.module_names) do
-		if element == module_name then
+		if string.lower(element) == string.lower(module_name) then
 			return true
 		end
 	end
@@ -101,7 +101,7 @@ end
 
 function utils.target_is_valid(Module, target)
 	for _, element in ipairs(Module.config.project.build_targets) do
-		if element == target then
+		if string.lower(element) == string.lower(target) then
 			return true
 		end
 	end
@@ -111,7 +111,7 @@ end
 
 function utils.target_type_is_valid(Module, target_type)
 	for _, element in ipairs(Module.config.project.build_target_types) do
-		if element == target then
+		if string.lower(element) == string.lower(target_type) then
 			return true
 		end
 	end
@@ -121,7 +121,7 @@ end
 
 function utils.platform_is_valid(Module, platform)
 	for _, element in ipairs(Module.config.project.platforms) do
-		if element == platform then
+		if string.lower(element) == string.lower(platform) then
 			return true
 		end
 	end
