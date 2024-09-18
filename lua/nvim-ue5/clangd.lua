@@ -21,25 +21,31 @@ end
 --- Add a debug flag
 function clangd.add_debug_flag(Module, clangd_file, debug_flag)
 	clangd_file:write('\t\t"-D' .. debug_flag .. '",\n')
+
+	--- Log what we have written
 	Module.log.write(Module, {"Flag:\t\t\t" .. debug_flag})
 end
 
 --- Add an engine include path
 function clangd.add_engine_include_path(Module, clangd_file, unreal_engine_path, secondary_path)
 	clangd_file:write('\t\t"-I' .. unreal_engine_path .. secondary_path .. '",\n')
-	local string = "Engine Include:\t\t" .. unreal_engine_path .. secondary_path
-	Module.log.write(Module, {string})
+	
+	--- Log what we have written
+	local log_string = "Engine Include:\t\t" .. unreal_engine_path .. secondary_path
+	Module.log.write(Module, {log_string})
 	local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
-	Module.highlights.highlight_paths(Module, string, num_lines)
+	Module.highlights.highlight_paths(Module, log_string, num_lines)
 end
 
 --- Add a project include path
 function clangd.add_project_include_path(Module, clangd_file, module_name)
 	clangd_file:write('\t\t"-I' .. vim.loop.cwd() .. '/Intermediate/Build/Linux/UnrealEditor/Inc/' .. module_name .. '/UHT",\n')
-	local string = "Project Include:\t" .. vim.loop.cwd() .. '/Intermediate/Build/Linux/UnrealEditor/Inc/' .. module_name .. '/UHT'
-	Module.log.write(Module, {string})
+	
+	--- Log what we have written
+	local log_string = "Project Include:\t" .. vim.loop.cwd() .. '/Intermediate/Build/Linux/UnrealEditor/Inc/' .. module_name .. '/UHT'
+	Module.log.write(Module, {log_string})
 	local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
-	Module.highlights.highlight_paths(Module, string, num_lines)
+	Module.highlights.highlight_paths(Module, log_string, num_lines)
 end
 
 --- Create the .clangd file

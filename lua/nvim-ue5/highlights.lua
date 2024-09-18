@@ -46,10 +46,14 @@ function highlights.highlight_paths(Module, line, num_lines)
 	local platform = Module.utils.get_current_platform()
 
 	if platform == "Linux" then
+		--- God I fucking hate regex
+		--- This regex detects paths, I am not going to explain it
 		local path_pattern = vim.regex('\\([A-Za-z0-9_-~]*\\/[A-Za-z0-9_-]*\\)\\+\\.*\\([A-Za-z0-9_-]\\+\\)*')
 		local path_start_pos = 0
 		local matches = {}
 		
+		--- Go through the line, adds a match dictionary into the matches dictionary
+		--- Match dictionaries just contain a start and end idx
 		while path_start_pos <= #line do
 			local start_idx, end_idx = path_pattern:match_str(line:sub(path_start_pos+1))
 			if type(start_idx) == 'number' then
@@ -61,6 +65,8 @@ function highlights.highlight_paths(Module, line, num_lines)
 				break
 			end
 		end
+
+		--- Iterate through the matches dictionary, and highlight all the matches
 		for i, value in ipairs(matches) do
 			vim.api.nvim_buf_add_highlight(Module.log.id, Module.highlights.namespace_id, 'UE5Path', num_lines-1, value[1], value[2])
 		end
@@ -69,8 +75,11 @@ end
 
 --- Parse a line (or lines) in the log window, and highlight any "seconds" using the UE5Seconds highlight group
 function highlights.highlight_seconds(Module, string, num_lines)
+	--- This regex detects "{number}.{number} seconds"
 	local seconds_pattern = vim.regex('\\([0-9]\\)\\+\\.\\([0-9]\\)\\+ seconds')
 	local start_idx, end_idx = seconds_pattern:match_str(string)
+	
+	--- If we found the match, highlight it
 	if type(start_idx) == 'number' then
 		vim.api.nvim_buf_add_highlight(Module.log.id, Module.highlights.namespace_id, 'UE5Seconds', num_lines-1, start_idx, end_idx)
 	end
@@ -79,8 +88,11 @@ end
 
 --- Parse a number of lines in the log window, and highlight all the module names
 function highlights.highlight_module_names(Module, string, num_lines)
+
+	--- Specifically target the output string
 	local target_module_name_pattern = vim.regex('\\(Running command : dotnet \\).*\\(-Target=\\)')
 	local start_idx, end_idx = target_module_name_pattern:match_str(string)
+	--- Make sure that we found a match
 	if type(start_idx) == 'number' then
 		local target_module_name_pattern = vim.regex('[A-Za-z]*')
 		local new_start_idx, new_end_idx = target_module_name_pattern:match_str(string:sub(end_idx+1))
@@ -89,8 +101,10 @@ function highlights.highlight_module_names(Module, string, num_lines)
 		end
 	end
 
+	--- Specifically target the compiling string
 	local compiling_pattern = vim.regex('\\(Compiling \\)')
 	local start_idx, end_idx = compiling_pattern:match_str(string)
+	--- Make sure that we found a match
 	if type(start_idx) == 'number' then
 		local module_name_pattern = vim.regex('[A-Za-z]*')
 		local new_start_idx, new_end_idx = module_name_pattern:match_str(string:sub(end_idx+1))
