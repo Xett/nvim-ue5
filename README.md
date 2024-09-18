@@ -47,10 +47,10 @@ When the line that GENERATED_BODY() or any macro like that is on changes, errors
 Unreal Engine classes and structs require boilerplat headers which can be generated via the editor, but this plugin can also handle generation.
 
 The following types can be generated:
-    - UClass
-    - AActor
-    - FStruct
-    - UInterface/IInterface
+- UClass
+- AActor
+- FStruct
+- UInterface/IInterface
 
 # Requirements
 ## Neovim Plugins
