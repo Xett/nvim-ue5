@@ -1,7 +1,11 @@
+--- Initialise Module
 local clean = {}
 
+--- Variables
 clean.hl_namespace_id = nil
 
+
+--- Bind Commands
 function clean.bind(Module)
 	vim.api.nvim_create_user_command('UEClean',
 		function(opts)
@@ -12,14 +16,19 @@ function clean.bind(Module)
 		})
 end
 
+--- Unbind Commands
 function clean.unbind(Module)
 	vim.api.nvim_del_user_command('UEClean')
 end
 
+--- Check if the file is in the whitelist (do NOT clean)
 function clean.is_file_in_whitelist(file_path, whitelist)
+	--- Gets the file name from the path, matches one or more characters at the end, except for a /
 	local file_pattern = vim.regex('[^/]+$')
+	--- Use our regex to get the file name from the file path
 	local file = vim.fn.matchstr('[^/]+$', file_path)
 
+	--- Check if the file name is in the whitelist
 	for _,entry in ipairs(whitelist) do
 		local result = vim.fn.matchstr(entry, file)
 		local matches = result ~= ""
@@ -31,6 +40,7 @@ function clean.is_file_in_whitelist(file_path, whitelist)
 	return false
 end
 
+--- Return the plugin config given the plugin name, if it isn't found we just return the default plugins
 function clean.get_plugin_config(plugin_name, plugins_config)
 	for plugin_dir, config in pairs(plugins_config) do
 		if plugin_dir == plugin_name then
@@ -40,6 +50,7 @@ function clean.get_plugin_config(plugin_name, plugins_config)
 	return plugins_config['default']
 end
 
+--- Delete all files in a directory (recursive). Ignores files in the whitelist
 function clean.delete_all_mode(Module, path, whitelist, recursive)
 	local handle = vim.loop.fs_scandir(path)
 	if handle then
@@ -62,6 +73,7 @@ function clean.delete_all_mode(Module, path, whitelist, recursive)
 	end
 end
 
+--- Delete a list of specific files, and checks the whitelist
 function clean.delete_specific_mode(Module, path, whitelist, files_to_delete)
 	for _,whitelist_entry in ipairs(files_to_delete) do
 		local file_path = path .. '/' .. whitelist_entry
@@ -100,15 +112,16 @@ function clean.clean_dir(Module, path, config, recursive)
 	end
 end
 
+--- The actual function called, to clean
 function clean.clean(Module)
-	---if Module.clean.hl_namepsace_id == nil then
-	---	Module.clean.create_ns_id(Module)
-	---	Module.clean.create_highlight_groups(Module)
-	---end
-
-	Module.log.open(Module)
-	Module.log.write(Module, {"Cleaning project directory..."})
+	--- Variables
 	local clean_map = Module.config.project.config['clean_map']
+	
+	--- Ensure that the log window is open
+	Module.log.open(Module)
+
+	Module.log.write(Module, {"Cleaning project directory..."})
+	
 	--- Iterate through the cleaning map
 	for dir, config in pairs(clean_map) do
 		--- root needs to be handled differently to everything else
@@ -145,4 +158,5 @@ function clean.clean(Module)
 	end
 end
 
+--- Return Module
 return clean

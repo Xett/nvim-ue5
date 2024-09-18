@@ -1,5 +1,7 @@
+--- Initialise Module
 local generate = {}
 
+--- Bind Commands
 function generate.bind(Module)
 	vim.api.nvim_create_user_command('UEGenerateProject',
 		function(opts)
@@ -10,6 +12,7 @@ function generate.bind(Module)
 		})
 end
 
+--- Unbind Commands
 function generate.unbind(Module)
 	vim.api.nvim_del_user_command('UEGenerateProject')
 end
@@ -59,4 +62,5 @@ function generate.generate_project_files(Module)
 	)
 end
 
+--- Return Module
 return generate

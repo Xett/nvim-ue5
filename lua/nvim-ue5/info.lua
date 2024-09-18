@@ -1,8 +1,11 @@
+--- Initialise Module
 local info = {}
 
+--- Variables
 info.win_id = nil
 info.last_win_id = nil
 
+--- Bind Commands
 function info.bind(Module)
 	vim.api.nvim_create_user_command('UEInfo',
 		function(opts)
@@ -13,13 +16,16 @@ function info.bind(Module)
 		})
 end
 
+--- Unbind Commands
 function info.unbind(Module)
 	vim.api.nvim_del_user_command('UEInfo')
 end
 
+--- Create the Info Window
 function info.create_window(Module)	
+	--- Variables
 	local height = 20
-	local width = 50
+	local width = 50 --- Make these configurable?
 	
 	info.last_win_id = vim.api.nvim_get_current_win()
 	local buffer_number = vim.api.nvim_create_buf(false, true)
@@ -69,11 +75,14 @@ function info.create_window(Module)
 	)
 
 	vim.api.nvim_set_current_win(info.win_id)
+
+	--- Bind closing commands
 	vim.api.nvim_buf_set_keymap(buffer_number, "n", "q", "<cmd>UEInfo<CR>", { silent=false })
 	vim.api.nvim_buf_set_keymap(buffer_number, "n", "<Esc>", "<cmd>UEInfo<CR>", { silent=false })
 	vim.api.nvim_buf_set_keymap(buffer_number, "n", "<CR>", "<cmd>UEInfo<CR>", { silent=false })
 end
 
+--- Close the Info Window
 function info.close_window()
 	vim.api.nvim_set_current_win(info.last_win_id)
 	vim.api.nvim_win_close(info.win_id, true)
@@ -81,6 +90,7 @@ function info.close_window()
 	info.last_win_id = nil
 end
 
+--- Toggle the Info Window
 function info.toggle_window(Module)
 	if info.win_id then
 		info.close_window()
@@ -89,4 +99,5 @@ function info.toggle_window(Module)
 	end
 end
 
+--- Return Module
 return info

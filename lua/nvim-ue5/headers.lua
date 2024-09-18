@@ -1,5 +1,7 @@
+--- Initialise Module
 local headers = {}
 
+--- Bind Commands
 function headers.bind(Module)
 	vim.api.nvim_create_user_command('UEGenerateHeaders',
 		function(opts)
@@ -29,17 +31,17 @@ function headers.bind(Module)
 		})
 end
 
+--- Unbind Commands
 function headers.unbind(Module)
 	vim.api.nvim_del_user_command('UEGenerateHeaders')
 end
 
+--- Use the Unreal Build Tool to generate the .generated.h header files, and log the output of the UBT
 function headers.generate_header_files(Module, module_name, platform, target)
-	local config = Module.config
-
 	Module.log.open(Module)
 
-	local options = config.options
-	local project_name = config.project['project_name']
+	local options = Module.config.options
+	local project_name = Module.config.project['project_name']
 
 	local project_string = '-Project=' .. vim.loop.cwd() .. '/' .. project_name .. '.uproject'
 	local target_string = '-Target=' .. module_name .. ' ' .. platform .. ' ' .. target
@@ -77,4 +79,5 @@ function headers.generate_header_files(Module, module_name, platform, target)
 	)
 end
 
+--- Return Module
 return headers

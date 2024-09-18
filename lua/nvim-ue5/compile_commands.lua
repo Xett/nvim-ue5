@@ -1,7 +1,10 @@
+--- Initialise Module
 local compile_commands = {}
 
+--- Variables
 compile_commands.hl_namespace_id = nil
 
+--- Bind Commands
 function compile_commands.bind(Module)
 	vim.api.nvim_create_user_command('UEGenerateCompileCommands',
 		function(opts)
@@ -12,37 +15,28 @@ function compile_commands.bind(Module)
 		})
 end
 
+--- Unbind Commands
 function compile_commands.unbind(Module)
 	vim.api.nvim_del_user_command('UEGenerateCompileCommands')
 end
 
-function compile_commands.create_ns_id(Module)
-	Module.compile_commands.hl_namespace_id = vim.api.nvim_create_namespace('nvim_ue5.compile_commands')
-end
-
-function compile_commands.create_highlight_groups(Module)
-	vim.cmd('highlight UE5CompileCommandsPath ctermfg=18')
-	vim.cmd('highlight UE5CompileCommandsSuccess ctermfg=Green')
-	vim.cmd('highlight UE5CompileCommandsFail ctermfg=Red')
-end
-
+---
 function compile_commands.get_engine_compile_commands_path(unreal_engine_path)
 	return unreal_engine_path .. "/.vscode/compileCommands_UE5.json"
 end
 
+--- 
 function compile_commands.get_project_compile_commands_path(project_name)
 	return vim.loop.cwd() .. "/.vscode/compileCommands_" .. project_name .. ".json"
 end
 
+---
 function compile_commands.get_output_path()
 	return vim.loop.cwd() .. "/compile_commands.json"
 end
 
+---
 function compile_commands.build_compile_commands(Module)
-	if Module.compile_commands.hl_namespace_id == nil then
-		Module.compile_commands.create_ns_id(Module)
-		Module.compile_commands.create_highlight_groups(Module)
-	end
 
 	local options = Module.config.options
 	local project_config = Module.config.project['config']
@@ -51,7 +45,7 @@ function compile_commands.build_compile_commands(Module)
 	Module.log.open(Module)
 	Module.log.write(Module, {"Generating compile_commands.json..."})
 	local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
-	vim.api.nvim_buf_add_highlight(Module.log.id, Module.compile_commands.hl_namespace_id, 'UE5CompileCommandsPath', num_lines-1, 11, 32)
+	vim.api.nvim_buf_add_highlight(Module.log.id, Module.highlights.namespace_id, 'UE5Path', num_lines-1, 11, 32)
 
 	local flags = " "
 	local compile_commands = project_config['compile_commands']
@@ -69,17 +63,18 @@ function compile_commands.build_compile_commands(Module)
 				if event == 'exit' and code == 0 then
 					Module.log.write(Module, {"compile_commands.json generated!"})
 					local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
-					vim.api.nvim_buf_add_highlight(Module.log.id, Module.compile_commands.hl_namespace_id, 'UE5CompileCommandsPath', num_lines-1, 0, 21)
-					vim.api.nvim_buf_add_highlight(Module.log.id, Module.compile_commands.hl_namespace_id, 'UE5CompileCommandsSuccess', num_lines-1, 22, -1)
+					vim.api.nvim_buf_add_highlight(Module.log.id, Module.highlights.namespace_id, 'UE5Path', num_lines-1, 0, 21)
+					vim.api.nvim_buf_add_highlight(Module.log.id, Module.highlights.namespace_id, 'UE5Success', num_lines-1, 22, -1)
 				else
 					Module.log.write(Module, {"Failed to generate compile_commands.json..."})
 					local num_lines = vim.api.nvim_buf_line_count(Module.log.id)
-					vim.api.nvim_buf_add_highlight(Module.log.id, Module.compile_commands.hl_namespace_id, 'UE5CompileCommandsFail', num_lines-1, 0, 18)
-					vim.api.nvim_buf_add_highlight(Module.log.id, Module.compile_commands.hl_namespace_id, 'UE5CompileCommandsPath', num_lines-1, 19, 40)
+					vim.api.nvim_buf_add_highlight(Module.log.id, Module.highlights.namespace_id, 'UE5Fail', num_lines-1, 0, 18)
+					vim.api.nvim_buf_add_highlight(Module.log.id, Module.highlights.namespace_id, 'UE5Path', num_lines-1, 19, 40)
 				end
 			end
 		}
 	)
 end
 
+--- Return Module
 return compile_commands
