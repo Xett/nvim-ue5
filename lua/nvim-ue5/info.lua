@@ -13,7 +13,8 @@ function info.bind(Module)
 		end,
 		{
 			desc="Displays plugin information such as the Engine Path, the Project Name, Module Names and Build Targets",	
-		})
+		}
+	)
 end
 
 --- Unbind Commands
