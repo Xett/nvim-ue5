@@ -1,10 +1,6 @@
 --- Initialise Module
 local clean = {}
 
---- Variables
-clean.hl_namespace_id = nil
-
-
 --- Bind Commands
 function clean.bind(Module)
 	vim.api.nvim_create_user_command('UEClean',
