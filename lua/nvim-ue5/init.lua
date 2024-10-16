@@ -35,6 +35,8 @@ nvim_ue5.loaded = false
 function nvim_ue5.setup(options)
 	--- Setup Config
 	nvim_ue5.config.setup(options)
+	---Initialise snippets
+	nvim_ue5.snippets.init(nvim_ue5)
 	--- Initialise commands
 	nvim_ue5.commands.init(nvim_ue5)
 	--- Initialise highlights

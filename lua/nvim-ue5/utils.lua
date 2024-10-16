@@ -35,7 +35,7 @@ function utils.get_generated_script_path(options)
 end
 
 --- Breaks apart an input string with commas, returns a table of the elements
-function utils.parse_comma_seperated(string)
+function utils.parse_comma_seperated(Module, string)
 	local comma_seperated_elements = {}
 
 	for element in string:gmatch('([^,]+)') do
@@ -52,7 +52,7 @@ function utils.write_to_current_buffer_line(text)
 end
 
 --- Create a string of tabs, based on the current cursor position (Used in snippet generation)
-function utils.get_tabs_string()
+function utils.get_tab_string()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
 	local tabstop = vim.api.nvim_buf_get_option(0, 'tabstop')
 	local virtrow = cursor_pos[1]
